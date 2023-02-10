@@ -1,10 +1,10 @@
 # Flatten
 for t in range(1, 11):
-    N = input() # int(input()) 에서 input()으로 받고 밑에서 형변환 했더니 ValueError없어짐  ??
+    N = int(input()) 
     lst = list(map(int, input().split()))
     cnt = 0
     while True:
-        if cnt == int(N):
+        if cnt == N:
             break
         cnt += 1
         big_index = lst.index(max(lst))
