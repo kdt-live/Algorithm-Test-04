@@ -1,13 +1,13 @@
 T = 10
 
 for tc in range(1, T + 1):
-    move = int(input()) # 상자 이동 가능 횟수
-    box = list(map(int, input().split())) # 상자 배열
+    move = int(input())
+    box = list(map(int, input().split()))
     
-    for i in range(move): # 상자 이동 가능 횟수 동안
+    for i in range(move):
 
-        high = box.index(max(box)) # 최댓값 index
-        low = box.index(min(box)) # 최소값 index
+        high = box.index(max(box))
+        low = box.index(min(box))
 
         box[high] += 1
         box[low] -= 1
