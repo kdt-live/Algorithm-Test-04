@@ -1,7 +1,7 @@
 import sys
 sys.stdin = open("input3.txt", "r")
 
-vowel = ['a', 'e','i','o','u']\
+vowel = ['a', 'e','i','o','u']
 
 T = int(input())
 for t in range(1, T+1):
