@@ -15,12 +15,12 @@ def dfs(start, matrix, depth, K):
             continue
         if matrix[b][a] == "X":
             continue
+        # 서로에게 영향을 받지 않는 지도 케이스 생성(shallow copy 활용)
         m = [row.copy() for row in matrix]
         if matrix[b][a] < height:
             """
             공사를 하지 않는 경우
             """
-            # 서로 영향을 받지 않는 지도 케이스 생성(shallow copy 활용)
             m[y][x] = "X"
             dfs((a, b), m, depth+1, K=K)
         elif matrix[b][a] - height < K:
