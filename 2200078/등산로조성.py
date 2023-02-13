@@ -1,28 +1,170 @@
 def test(N, K):
-    global data
-    data = dict()
-    # 입력 받기 
+    # 3 ≤ N ≤ 8
+    # 1 ≤ K ≤ 5
+    # 지형 입력 받기
+    global data, k
+    k = K
+    data = [list(map(int, input().split())) for _ in range(N)]
+    peak_h = max(max(row) for row in data)
+    peaks = []
     for i in range(N):
-        row = list(map(int, input().split()))
         for j in range(N):
-            data[row[j]] = data.get(row[j], [])
-            data[row[j]].append((i, j))
+            if data[i][j] == peak_h:
+                peaks.append((i, j))
+    rst = []
+    for peak in peaks:
+        i, j = peak
+        visited = [(i, j)]
+        rst.append(1 + max(goLeft(i, j, 0, visited), goRight(i, j, 0, visited), goUp(i, j, 0, visited), goDown(i, j, 0, visited))) 
+    return max(rst)
 
-    # 가장 높은 봉우리의 높이
-    peak = max(data.keys())
-    # 각 봉우리 별로 최대 등산로를 찾는다
-    ans = []
-    for x in data[peak]:
-        ans.append(answer(x, peak, N, K))
+def goLeft(i, j, z, visited):
+    global data, k
+    if i > 0:
+        x, y = i-1, j
+        if (x, y) in visited:
+            return 0
+        else:
+            v = [(x, y)]
+            v.extend(visited)
+        if z < 0:
+            if data[i][j] > data[x][y]:
+                i, j = x, y
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            else:
+                return 0
+        elif z == 0:
+            if data[i][j] > data[x][y]:
+                i, j = x, y
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            elif data[x][y] - data[i][j] < k:
+                i, j, z = x, y, data[x][y] - data[i][j] + 1
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+                
+            else:
+                return 0
+        else:
+            if data[i][j] - z > data[x][y]:
+                i, j, z = x, y, -1
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            else:
+                return 0
+    else:
+        return 0
+def goRight(i, j, z, visited):
+    global data, k
+    if i < N-1:
+        x, y = i+1, j
+        if (x, y) in visited:
+            return 0
+        else:
+            v = [(x, y)]
+            v.extend(visited)
+        if z < 0:
+            if data[i][j] > data[x][y]:
+                i, j = x, y
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+                
+            else:
+                return 0
+        
+        elif z == 0:
+            if data[i][j] > data[x][y]:
+                i, j = x, y
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            elif data[x][y] - data[i][j] < k:
+                i, j, z = x, y, data[x][y] - data[i][j] + 1
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))                
+            else:
+                return 0
+        else:
+            if data[i][j] - z > data[x][y]:
+                i, j, z = x, y, -1
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v)) 
+            else:
+                return 0
+    else:
+        return 0
     
-    return max(ans)
+def goUp(i, j, z, visited):
+    global data, k
+    if j < N-1:
+        x, y = i, j+1
+        if (x, y) in visited:
+            return 0
+        else:
+            v = [(x, y)]
+            v.extend(visited)
+        
+        if z < 0:
+            if data[i][j] > data[x][y]:
+                i, j = x, y
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            else:
+                return 0
+        elif z == 0:
+            if data[i][j] > data[x][y]:
+                i, j = x, y
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            elif data[x][y] - data[i][j] < k:
+                i, j, z = x, y, data[x][y] - data[i][j] + 1
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            else:
+                return 0
+        else:
+            if data[i][j] - z > data[x][y]:
+                i, j, z = x, y, -1
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            else:
+                return 0
+    else:
+        return 0
 
-def answer(x, peak, N, K):
-    # dfs를 활용한다
-    i, j = x
-    h = peak
-    path = [(i, j)]
-    dx = [(1, 0), (0, 1), (-1, 0), (0, -1)]
-    for (di, dj) in dx:
-        if (i+di, j+dj) not in path and 
-            
+def goDown(i, j, z, visited):
+    global data, k
+    if j > 0:
+        x, y = i, j-1
+        if (x, y) in visited:
+            return 0
+        else:
+            v = [(x, y)]
+            v.extend(visited)
+        if z < 0:
+            if data[i][j] > data[x][y]:
+                i, j = x, y
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            else:
+                return 0
+        
+        elif z == 0:
+            if data[i][j] > data[x][y]:
+                i, j = x, y
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            elif data[x][y] - data[i][j] < k:
+                i, j, z = x, y, data[x][y] - data[i][j] + 1
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+            else:
+                return 0
+        else:
+            if data[i][j] - z > data[x][y]:
+                i, j, z = x, y, -1
+                return 1 + max(goLeft(i, j, z, v), goRight(i, j, z, v), goUp(i, j, z, v), goDown(i, j, z, v))
+                
+            else:
+                return 0
+    else:
+        return 0
+
+import sys
+sys.stdin = open('./input.txt', 'r')
+input = sys.stdin.readline
+inputs = sys.stdin.readlines
+
+
+T =  int(input())
+rst = [0]*T
+for _ in range(T):
+    N, K = map(int, input().split())
+    rst[_] = test(N, K)
+
+[print(f'#{i} {rst[i-1]}') for i in range(1, len(rst)+1)]
