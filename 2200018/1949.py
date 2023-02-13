@@ -8,28 +8,28 @@ input = stdin.readline
 def dfs(start, matrix, depth, K):
     global result
     (x, y) = start
-    height = matrix[y][x]
+    cur_height = matrix[y][x]
 
     for i in r(4):
         a = x + dx[i]
         b = y + dy[i]
-        if a < 0 or b < 0 or a >= N or b >= N:
+        if not (N>a>=0 and N>b>=0):
             continue
         if matrix[b][a] == "X":
             continue
         # 서로에게 영향을 받지 않는 지도 케이스 생성(shallow copy 활용) 및 방문표시
         m = [row.copy() for row in matrix]
         m[y][x] = "X"
-        if matrix[b][a] < height:
+        if matrix[b][a] < cur_height:
             """
             공사를 하지 않는 경우
             """
             dfs((a, b), m, depth + 1, K=K)
-        elif matrix[b][a] - height < K:
+        elif matrix[b][a] - cur_height < K:
             """
-            다음 구간이 현재 구간보다 크거나 같지만 다음 구간을 1~c 만큼 줄이면 지나갈 수 있는 경우
+            다음 구간이 현재 구간보다 크거나 같지만 다음 구간을 줄이면 지나갈 수 있는 경우
             """
-            m[b][a] = height - 1  # 공사(최소 필요 공사 크기)
+            m[b][a] = cur_height - 1  # 공사(최소 필요 공사 크기)
             dfs((a, b), m, depth + 1, K=0)
     else:
         """
