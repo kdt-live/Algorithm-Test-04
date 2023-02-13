@@ -1,7 +1,9 @@
 from sys import stdin
+
 stdin = open("input_1949.txt")
 # stdin = open("sample_input.txt")
 input = stdin.readline
+
 
 def dfs(start, matrix, depth, K):
     global result
@@ -22,20 +24,21 @@ def dfs(start, matrix, depth, K):
             공사를 하지 않는 경우
             """
             m[y][x] = "X"
-            dfs((a, b), m, depth+1, K=K)
+            dfs((a, b), m, depth + 1, K=K)
         elif matrix[b][a] - height < K:
             """
             다음 구간이 현재 구간보다 크거나 같지만 다음 구간을 1~c 만큼 줄이면 지나갈 수 있는 경우
             """
-            m[b][a] = m[y][x] - 1   # 최소 필요 공사 크기
-            m[y][x] = "X"   # 공사 후 방문표시
-            dfs((a, b), m, depth+1, K=0)
+            m[b][a] = m[y][x] - 1  # 최소 필요 공사 크기
+            m[y][x] = "X"  # 공사 후 방문표시
+            dfs((a, b), m, depth + 1, K=0)
     else:
         """
         진행할 수 없는 경우
         """
         if result < depth:
             result = depth
+
 
 r = range
 for i in r(int(input())):
