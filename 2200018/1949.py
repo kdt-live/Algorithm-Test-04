@@ -20,12 +20,12 @@ def dfs(start, matrix, depth, K):
         # 서로에게 영향을 받지 않는 지도 케이스 생성(shallow copy 활용) 및 방문표시
         m = [row.copy() for row in matrix]
         m[y][x] = "X"
-        if matrix[b][a] < cur_height:
+        if m[b][a] < cur_height:
             """
             공사를 하지 않는 경우
             """
             dfs((a, b), m, depth + 1, K=K)
-        elif matrix[b][a] - cur_height < K:
+        elif m[b][a] - cur_height < K:
             """
             다음 구간이 현재 구간보다 크거나 같지만 다음 구간을 줄이면 지나갈 수 있는 경우
             """
